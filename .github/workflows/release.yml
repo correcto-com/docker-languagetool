@@ -44,7 +44,7 @@ jobs:
             --tag $DOCKERHUB_REPOSITORY:latest \
             --platform linux/amd64,linux/arm64 .
         env:
-          DOCKERHUB_REPOSITORY: erikvl87/languagetool
+          DOCKERHUB_REPOSITORY: correctoai/docker-languagetool
       # - name: Push to GitHub Packages
       #   run: |
       #     docker tag languagetool docker.pkg.github.com/${{ github.repository }}/languagetool:$DOCKER_TAG

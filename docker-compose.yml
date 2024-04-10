@@ -4,7 +4,7 @@ version: "3"
 
 services:
   languagetool:
-    image: erikvl87/languagetool
+    image: correctoai/docker-languagetool
     container_name: languagetool
     ports:
       - 8010:8010                        # Using default port from the image
