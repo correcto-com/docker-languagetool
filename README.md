@@ -10,8 +10,8 @@ This repository contains a Dockerfile to create a Docker image for [LanguageTool
 ## Setup using Docker Hub
 
 ```sh
-docker pull erikvl87/languagetool
-docker run --rm -p 8010:8010 erikvl87/languagetool
+docker pull correctoai/docker-languagetool
+docker run --rm -p 8010:8010 correctoai/docker-languagetool
 ```
 
 This will pull the `latest` tag from Docker Hub. Optionally, specify a [tag](https://hub.docker.com/r/erikvl87/languagetool/tags) to pin onto a fixed version. These versions are derived from the official LanguageTool releases. Updates to the Dockerfile for already published versions are released with a `-dockerupdate-{X}` postfix in the tag (where `{X}` is an incremental number).
@@ -20,7 +20,7 @@ This will pull the `latest` tag from Docker Hub. Optionally, specify a [tag](htt
 This approach could be used when you plan to make changes to the `Dockerfile`.
 
 ```sh
-git clone https://github.com/Erikvl87/docker-languagetool.git --config core.autocrlf=input
+git clone https://github.com/correcto-com/docker-languagetool --config core.autocrlf=input
 docker build -t languagetool .
 docker run --rm -it -p 8010:8010 languagetool
 ```
@@ -33,7 +33,7 @@ LanguageTool will be started with a minimal heap size (`-Xms`) of `256m` and a m
 An example startup configuration:
 
 ```sh
-docker run --rm -it -p 8010:8010 -e Java_Xms=512m -e Java_Xmx=2g erikvl87/languagetool
+docker run --rm -it -p 8010:8010 -e Java_Xms=512m -e Java_Xmx=2g correctoai/docker-languagetool
 ```
 
 ## LanguageTool HTTPServerConfig
@@ -42,7 +42,7 @@ You are able to use the [HTTPServerConfig](https://languagetool.org/development/
 An example startup configuration:
 
 ```sh
-docker run --rm -it -p 8010:8010 -e langtool_pipelinePrewarming=true -e Java_Xms=1g -e Java_Xmx=2g erikvl87/languagetool
+docker run --rm -it -p 8010:8010 -e langtool_pipelinePrewarming=true -e Java_Xms=1g -e Java_Xmx=2g correctoai/docker-languagetool
 ```
 
 ## Using n-gram datasets
@@ -71,7 +71,7 @@ Mount the local ngrams directory to the `/ngrams` directory in the Docker contai
 An example startup configuration:
 
 ```sh
-docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v /home/john/ngrams:/ngrams:ro erikvl87/languagetool
+docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v /home/john/ngrams:/ngrams:ro correctoai/docker-languagetool
 ```
 
 ## Improving the spell checker
@@ -86,7 +86,7 @@ docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v /home/john
 The following `Dockerfile` contains an example on how to add words to `spelling.txt`. It assumes you have your own list of words in `en_spelling_additions.txt` next to the `Dockerfile`.
 
 ```dockerfile
-FROM erikvl87/languagetool
+FROM correctoai/docker-languagetool
 
 # Improving the spell checker
 # http://wiki.languagetool.org/hunspell-support
@@ -124,3 +124,10 @@ Please refer to the official LanguageTool documentation for further usage instru
 
 If you experience problems when connecting local server to the official Firefox extension, see [cors-workaround](cors-workaround/).
 
+# Creating and Publishing a new Docker image & tag
+
+```sh
+docker build . -t correctoai/docker-languagetool:6.4 -t correctoai/docker-languagetool:latest
+docker push correctoai/docker-languagetool:6.4
+docker push correctoai/docker-languagetool:latest
+```
