@@ -11,7 +11,7 @@ if [ "$config_injected" = true ] ; then
 	echo "$(cat config.properties)"
 fi
 
-Xms=${Java_Xms:-256m}
-Xmx=${Java_Xmx:-512m}
+Xms=${Java_Xms:-1g}
+Xmx=${Java_Xmx:-2g}
 
 exec java -Xms$Xms -Xmx$Xmx -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8010 --public --allow-origin '*' --config config.properties

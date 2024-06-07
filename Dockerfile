@@ -54,11 +54,23 @@ WORKDIR /languagetool
 FROM alpine:3.19.0
 
 RUN apk add --no-cache \
+    && apk --no-cache add --virtual .builddeps \
+    build-base -dev \
     bash \
     curl \
     libc6-compat \
     libstdc++ \
-    openjdk11-jre-headless
+    openjdk11-jre-headless \
+    gcc \
+    g++ \
+    fasttext-dev \
+    fasttext-libs \
+    wget \
+    git \
+    unzip \
+    bash \
+    libstdc++ \
+    && rm -rf /var/cache/apk/*
 
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
@@ -72,7 +84,29 @@ COPY --chown=languagetool start.sh start.sh
 
 COPY --chown=languagetool config.properties config.properties
 
+FROM alpine:3.16.2 as build
+RUN apk add git build-base --no-cache
+RUN git clone https://github.com/facebookresearch/fastText.git \
+    && cd fastText \
+    && make
+
+RUN wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
+
+FROM erikvl87/languagetool:latest
+
+WORKDIR /LanguageTool
+
+COPY --chown=languagetool --from=build /fastText/fasttext .
+COPY --chown=languagetool --from=build lid.176.bin .
+
 USER languagetool
+
+ENV langtool_maxCheckThreads=10
+ENV langtool_cacheSize=512000
+ENV langtool_fasttextModel=/LanguageTool/lid.176.bin
+ENV langtool_fasttextBinary=/LanguageTool/fasttext
+ENV Java_Xms=1g
+ENV Java_Xmx=2g
 
 HEALTHCHECK --timeout=10s --start-period=5s CMD curl --fail --data "language=en-US&text=a simple test" http://localhost:8010/v2/check || exit 1
 
