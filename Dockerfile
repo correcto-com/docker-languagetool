@@ -51,7 +51,7 @@ WORKDIR /languagetool
 
 # Note: When changing the base image, verify that the hunspell.sh workaround is
 # downloading the matching version of `libhunspell`. The URL may need to change.
-FROM alpine:3.19.0
+FROM alpine:3.20.1
 
 RUN apk add --no-cache \
     && apk --no-cache add --virtual .builddeps \
@@ -84,7 +84,7 @@ COPY --chown=languagetool start.sh start.sh
 
 COPY --chown=languagetool config.properties config.properties
 
-FROM alpine:3.16.2 as build
+FROM alpine:3.20.1 as build
 RUN apk add git build-base --no-cache
 RUN git clone https://github.com/facebookresearch/fastText.git \
     && cd fastText \
