@@ -127,7 +127,7 @@ If you experience problems when connecting local server to the official Firefox 
 # Creating and Publishing a new Docker image & tag
 
 ```sh
-docker build . -t correctoai/docker-languagetool:6.4 -t correctoai/docker-languagetool:latest
-docker push correctoai/docker-languagetool:6.4
+docker build --platform="linux/amd64" . -t correctoai/docker-languagetool:6.5 -t correctoai/docker-languagetool:latest
+docker push correctoai/docker-languagetool:6.5
 docker push correctoai/docker-languagetool:latest
 ```
